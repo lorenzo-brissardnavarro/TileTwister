@@ -14,8 +14,44 @@ Grid::Grid()
 
 
 bool Grid::loadFont() {
-    font = TTF_OpenFont("fonts/BebasNeue-Regular.ttf", 38);
+    font = TTF_OpenFont("fonts/BebasNeue-Regular.ttf", 48);
     return font != nullptr;
+}
+
+void Grid::initialize() {
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            grid[i][j] = 0;
+        }
+    }
+    grid[0][0] = 2;
+    grid[0][2] = 4;
+    grid[1][1] = 2;
+    grid[2][2] = 8;
+    grid[3][3] = 2;
+}
+
+void Grid::drawText(SDL_Renderer* pRenderer, std::string text, int x, int y) {
+    SDL_Color color = { 0, 0, 0, 255 };
+
+    SDL_Surface* surface = TTF_RenderText_Blended(font, text.c_str(), 0, color);
+    if (surface == nullptr) {
+        return;
+    }
+        
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(pRenderer, surface);
+    if (texture == nullptr) {
+        SDL_DestroySurface(surface);
+        return;
+    }
+    float texteX = x + (90 - surface->w) / 2.0f;
+    float texteY = y + (90 - surface->h) / 2.0f;
+
+    SDL_FRect destination = {texteX, texteY, (float)surface->w, (float)surface->h};
+    SDL_RenderTexture(pRenderer, texture, nullptr, &destination);
+
+    SDL_DestroyTexture(texture);
+    SDL_DestroySurface(surface);
 }
 
 
@@ -29,6 +65,10 @@ void Grid::draw(SDL_Renderer* pRenderer) {
 
             Tile tileGame(x, y, 90, 90, { 196, 181, 181, 255 });
             tileGame.draw(pRenderer);
+
+            if (grid[i][j] != 0) {
+                drawText(pRenderer, std::to_string(grid[i][j]), x, y);
+            }
         }
     }
 }

@@ -9,6 +9,7 @@ Game::Game()
 
 
 void Game::initialize(SDL_Renderer* pRenderer) {
+    grid.initialize();
     grid.loadFont();
 
 }
