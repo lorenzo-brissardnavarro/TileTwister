@@ -7,7 +7,7 @@ using namespace std;
 
 
 Grid::Grid()
-    : grid{}, font(nullptr)
+    : grid{}, font(nullptr), gen(std::random_device{}())
 {
 }
 
@@ -24,12 +24,31 @@ void Grid::initialize() {
             grid[i][j] = 0;
         }
     }
-    grid[0][0] = 2;
-    grid[0][2] = 4;
-    grid[1][1] = 2;
-    grid[2][2] = 8;
-    grid[3][3] = 2;
+
+    addTile();
+    addTile();
 }
+
+
+void Grid::addTile() {
+    std::uniform_int_distribution<int> distribPosition(0, 3);
+    std::uniform_int_distribution<int> distribValue(1, 10);
+
+    int row;
+    int column;
+
+    do {
+        row = distribPosition(gen);
+        column = distribPosition(gen);
+    } while (grid[row][column] != 0);
+
+    if (distribValue(gen) <= 9) {
+        grid[row][column] = 2;
+    } else {
+        grid[row][column] = 4;
+    }
+}
+
 
 void Grid::drawText(SDL_Renderer* pRenderer, std::string text, int x, int y) {
     SDL_Color color = { 0, 0, 0, 255 };
