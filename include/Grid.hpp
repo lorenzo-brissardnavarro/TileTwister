@@ -24,16 +24,9 @@ public:
     void draw(SDL_Renderer* pRenderer);
     void drawText(SDL_Renderer* pRenderer, std::string text, int x, int y);
     void addTile();
-    void leftShift();
-    void rightShift();
-    void upShift();
-    void downShift();
-    void leftMerge();
-    void rightMerge();
-    void upMerge();
-    void downMerge();
+    void shift(char direction);
+    void merge(char direction);
     void move(char direction);
-    void columnShift(int column, bool up);
     bool loadFont();
 
     ~Grid();

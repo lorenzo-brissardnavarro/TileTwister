@@ -137,128 +137,116 @@ void Grid::draw(SDL_Renderer* pRenderer) {
 }
 
 
-void Grid::leftShift() {
-    for(int i = 0 ; i < 4 ; i++) {
-        stable_partition(grid[i].begin(), grid[i].end(), [](int n) { 
-            return n != 0; 
-        });
-    }
-}
-
-void Grid::rightShift() {
-    for(int i = 0 ; i < 4 ; i++) {
-        stable_partition(grid[i].begin(), grid[i].end(), [](int n) { 
-            return n == 0; 
-        });
-    }
-}
-
-void Grid::columnShift(int column, bool up) {
-    std::vector<int> temp(4);
-    for(int j = 0 ; j < 4 ; j++) {
-        temp[j] = grid[j][column];
-    }
-
-    if(up) {
-        stable_partition(temp.begin(), temp.end(), [](int n) {
-            return n != 0;
-        });
-    } else {
-        stable_partition(temp.begin(), temp.end(), [](int n) {
-            return n == 0;
-        });
-    }
-
-    for(int j = 0 ; j < 4 ; j++) {
-        grid[j][column] = temp[j];
-    }
-}
-
-void Grid::upShift() {
-    for(int i = 0 ; i < 4 ; i++) {
-        columnShift(i, true);
-    }
-}
 
 
-void Grid::downShift() {
-    for(int i = 0 ; i < 4 ; i++) {
-        columnShift(i, false);
-    }
-}
-
-
-void Grid::leftMerge() {
-    for(int i = 0 ; i < 4 ; i++) {
-        for(int j = 0 ; j < 3 ; j++) {
-            if(grid[i][j] == grid[i][j+1]){
-                grid[i][j] *= 2;
-                grid[i][j+1] = 0;
-            }
-        }
-    }
-}
-
-
-void Grid::rightMerge() {
-    for(int i = 0 ; i < 4 ; i++) {
-        for(int j = 3 ; j > 0 ; j--) {
-            if(grid[i][j] == grid[i][j-1]){
-                grid[i][j] *= 2;
-                grid[i][j-1] = 0;
-            }
-        }
-    }
-}
-
-void Grid::upMerge() {
-    for(int i = 0 ; i < 4 ; i++) {
-        for(int j = 0 ; j < 3 ; j++) {
-            if(grid[j][i] == grid[j+1][i]){
-                grid[j][i] *= 2;
-                grid[j+1][i] = 0;
-            }
-        }
-    }
-}
-
-void Grid::downMerge() {
-    for(int i = 0 ; i < 4 ; i++) {
-        for(int j = 3 ; j > 0 ; j--) {
-            if(grid[j][i] == grid[j-1][i]){
-                grid[j][i] *= 2;
-                grid[j-1][i] = 0;
-            }
-        }
-    }
-}
-
-void Grid::move(char direction) {
+void Grid::shift(char direction) {
     switch(direction) {
         case 'l':
-            leftShift();
-            leftMerge();
-            leftShift();
+            for(int i = 0 ; i < 4 ; i++) {
+                stable_partition(grid[i].begin(), grid[i].end(), [](int n) {
+                    return n != 0;
+                });
+            }
             break;
 
         case 'r':
-            rightShift();
-            rightMerge();
-            rightShift();
+            for(int i = 0 ; i < 4 ; i++) {
+                stable_partition(grid[i].begin(), grid[i].end(), [](int n) {
+                    return n == 0;
+                });
+            }
             break;
 
         case 'u':
-            upShift();
-            upMerge();
-            upShift();
+            for(int i = 0 ; i < 4 ; i++) {
+                std::vector<int> temp(4);
+                for(int j = 0 ; j < 4 ; j++) {
+                    temp[j] = grid[j][i];
+                }
+                stable_partition(temp.begin(), temp.end(), [](int n) {
+                    return n != 0;
+                });
+                for(int j = 0 ; j < 4 ; j++) {
+                    grid[j][i] = temp[j];
+                }
+            }
             break;
 
         case 'd':
-            downShift();
-            downMerge();
-            downShift();
+            for(int i = 0 ; i < 4 ; i++) {
+                std::vector<int> temp(4);
+                for(int j = 0 ; j < 4 ; j++) {
+                    temp[j] = grid[j][i];
+                }
+                stable_partition(temp.begin(), temp.end(), [](int n) {
+                    return n == 0;
+                });
+                for(int j = 0 ; j < 4 ; j++) {
+                    grid[j][i] = temp[j];
+                }
+            }
             break;
     }
+}
+
+
+
+
+
+void Grid::merge(char direction) {
+    switch(direction) {
+        case 'l':
+            for(int i = 0 ; i < 4 ; i++) {
+                for(int j = 0 ; j < 3 ; j++) {
+                    if(grid[i][j] == grid[i][j+1]){
+                        grid[i][j] *= 2;
+                        grid[i][j+1] = 0;
+                    }
+                }
+            }
+            break;
+
+        case 'r':
+            for(int i = 0 ; i < 4 ; i++) {
+                for(int j = 3 ; j > 0 ; j--) {
+                    if(grid[i][j] == grid[i][j-1]){
+                        grid[i][j] *= 2;
+                        grid[i][j-1] = 0;
+                    }
+                }
+            }
+            break;
+
+        case 'u':
+            for(int i = 0 ; i < 4 ; i++) {
+                for(int j = 0 ; j < 3 ; j++) {
+                    if(grid[j][i] == grid[j+1][i]){
+                        grid[j][i] *= 2;
+                        grid[j+1][i] = 0;
+                    }
+                }
+            }
+            break;
+
+        case 'd':
+            for(int i = 0 ; i < 4 ; i++) {
+                for(int j = 3 ; j > 0 ; j--) {
+                    if(grid[j][i] == grid[j-1][i]){
+                        grid[j][i] *= 2;
+                        grid[j-1][i] = 0;
+                    }
+                }
+            }
+            break;
+    }
+}
+
+
+
+void Grid::move(char direction) {
+    shift(direction);
+    merge(direction);
+    shift(direction);
 }
 
 
