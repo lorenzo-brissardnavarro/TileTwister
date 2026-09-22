@@ -20,20 +20,24 @@ void Game::startInterface(SDL_Renderer* pRenderer) {
 
 
 void Game::manageKeyboard(SDL_Event& event) {
+    char direction;
     switch (event.key.key) {
         case SDLK_UP:
-            grid.move('u');
+            direction = 'u';
             break;
         case SDLK_DOWN:
-            grid.move('d');
+            direction = 'd';
             break;
         case SDLK_LEFT:
-            grid.move('l');
+            direction = 'l';
             break;
         case SDLK_RIGHT:
-            grid.move('r');
+            direction = 'r';
             break;
         default:
-            break;
+            return;
     }
+    if (grid.move(direction))
+        grid.addTile();
+        
 }

@@ -15,6 +15,7 @@ private:
     std::vector<std::vector<int>> grid;
     TTF_Font* font;
     std::mt19937 gen;
+    int score;
 
 public:
 
@@ -26,8 +27,9 @@ public:
     void addTile();
     void shift(char direction);
     void merge(char direction);
-    void move(char direction);
+    bool move(char direction);
     bool loadFont();
+    void setScore();
 
     ~Grid();
 

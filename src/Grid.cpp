@@ -8,7 +8,7 @@ using namespace std;
 
 
 Grid::Grid()
-    : grid(4, std::vector<int>(4, 0)), font(nullptr), gen(std::random_device{}())
+    : grid(4, std::vector<int>(4, 0)), font(nullptr), gen(std::random_device{}()), score(0)
 {
 }
 
@@ -25,10 +25,6 @@ void Grid::initialize() {
             grid[i][j] = 0;
         }
     }
-    grid[0][0] = 2;
-    grid[1][0] = 2;
-    grid[2][0] = 2;
-    grid[3][0] = 2;
     addTile();
     addTile();
 }
@@ -79,12 +75,13 @@ void Grid::drawText(SDL_Renderer* pRenderer, std::string text, int x, int y) {
 
 
 void Grid::draw(SDL_Renderer* pRenderer) {
-    Tile boardGame(75, 75, 450, 450, { 136, 129, 129, 255 });
+    drawText(pRenderer, "Score : " + std::to_string(this->score), 105, 30);
+    Tile boardGame(75, 125, 450, 450, { 136, 129, 129, 255 });
     boardGame.draw(pRenderer);
     for (int i = 0; i < 4; ++i) {
         for (int j = 0; j < 4; ++j) {
             int x = 105 + j * 100;
-            int y = 105 + i * 100;
+            int y = 155 + i * 100;
 
             SDL_Color color = { 196, 181, 181, 255 };
 
@@ -199,6 +196,7 @@ void Grid::merge(char direction) {
             for(int i = 0 ; i < 4 ; i++) {
                 for(int j = 0 ; j < 3 ; j++) {
                     if(grid[i][j] == grid[i][j+1]){
+                        this->score += grid[i][j];
                         grid[i][j] *= 2;
                         grid[i][j+1] = 0;
                     }
@@ -210,6 +208,7 @@ void Grid::merge(char direction) {
             for(int i = 0 ; i < 4 ; i++) {
                 for(int j = 3 ; j > 0 ; j--) {
                     if(grid[i][j] == grid[i][j-1]){
+                        this->score += grid[i][j];
                         grid[i][j] *= 2;
                         grid[i][j-1] = 0;
                     }
@@ -221,6 +220,7 @@ void Grid::merge(char direction) {
             for(int i = 0 ; i < 4 ; i++) {
                 for(int j = 0 ; j < 3 ; j++) {
                     if(grid[j][i] == grid[j+1][i]){
+                        this->score += grid[j][i];
                         grid[j][i] *= 2;
                         grid[j+1][i] = 0;
                     }
@@ -232,6 +232,7 @@ void Grid::merge(char direction) {
             for(int i = 0 ; i < 4 ; i++) {
                 for(int j = 3 ; j > 0 ; j--) {
                     if(grid[j][i] == grid[j-1][i]){
+                        this->score += grid[j][i];
                         grid[j][i] *= 2;
                         grid[j-1][i] = 0;
                     }
@@ -243,10 +244,12 @@ void Grid::merge(char direction) {
 
 
 
-void Grid::move(char direction) {
+bool Grid::move(char direction) {
+    auto oldGrid = grid;
     shift(direction);
     merge(direction);
     shift(direction);
+    return oldGrid != grid;
 }
 
 
