@@ -25,6 +25,9 @@ public:
     void drawText(SDL_Renderer* pRenderer, std::string text, int x, int y);
     void addTile();
     void leftShift();
+    void rightShift();
+    void upShift();
+    void downShift();
     bool loadFont();
 
     ~Grid();

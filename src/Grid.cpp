@@ -95,10 +95,52 @@ void Grid::draw(SDL_Renderer* pRenderer) {
 
 
 void Grid::leftShift() {
-    for(int i = 0 ; i < 3 ; i++) {
+    for(int i = 0 ; i < 4 ; i++) {
         stable_partition(grid[i].begin(), grid[i].end(), [](int n) { 
             return n != 0; 
         });
+    }
+}
+
+void Grid::rightShift() {
+    for(int i = 0 ; i < 4 ; i++) {
+        stable_partition(grid[i].begin(), grid[i].end(), [](int n) { 
+            return n == 0; 
+        });
+    }
+}
+
+void Grid::upShift() {
+    for(int i = 0 ; i < 4 ; i++) {
+        std::vector<int> temp(4);
+        for(int j = 0 ; j < 4 ; j++) {
+            temp[j] = grid[j][i];
+        }
+
+        std::stable_partition(temp.begin(), temp.end(), [](int n) {
+            return n != 0; 
+        });
+
+        for(int j = 0 ; j < 4 ; j++) {
+            grid[j][i] = temp[j];
+        }
+    }
+}
+
+void Grid::downShift() {
+    for(int i = 0 ; i < 4 ; i++) {
+        std::vector<int> temp(4);
+        for(int j = 0 ; j < 4 ; j++) {
+            temp[j] = grid[j][i];
+        }
+
+        std::stable_partition(temp.begin(), temp.end(), [](int n) {
+            return n == 0; 
+        });
+
+        for(int j = 0 ; j < 4 ; j++) {
+            grid[j][i] = temp[j];
+        }
     }
 }
 
