@@ -28,6 +28,10 @@ public:
     void rightShift();
     void upShift();
     void downShift();
+    void leftMerge();
+    void rightMerge();
+    void upMerge();
+    void downMerge();
     bool loadFont();
 
     ~Grid();

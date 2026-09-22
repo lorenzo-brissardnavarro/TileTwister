@@ -140,6 +140,7 @@ void Grid::leftShift() {
             return n != 0; 
         });
     }
+    leftMerge();
 }
 
 void Grid::rightShift() {
@@ -148,6 +149,7 @@ void Grid::rightShift() {
             return n == 0; 
         });
     }
+    rightMerge();
 }
 
 void Grid::upShift() {
@@ -165,6 +167,7 @@ void Grid::upShift() {
             grid[j][i] = temp[j];
         }
     }
+    upMerge();
 }
 
 void Grid::downShift() {
@@ -180,6 +183,53 @@ void Grid::downShift() {
 
         for(int j = 0 ; j < 4 ; j++) {
             grid[j][i] = temp[j];
+        }
+    }
+    downMerge();
+}
+
+
+void Grid::leftMerge() {
+    for(int i = 0 ; i < 4 ; i++) {
+        for(int j = 0 ; j < 3 ; j++) {
+            if(grid[i][j] == grid[i][j+1]){
+                grid[i][j] *= 2;
+                grid[i][j+1] = 0;
+            }
+        }
+    }
+}
+
+
+void Grid::rightMerge() {
+    for(int i = 0 ; i < 4 ; i++) {
+        for(int j = 3 ; j > 0 ; j--) {
+            if(grid[i][j] == grid[i][j-1]){
+                grid[i][j] *= 2;
+                grid[i][j-1] = 0;
+            }
+        }
+    }
+}
+
+void Grid::upMerge() {
+    for(int i = 0 ; i < 4 ; i++) {
+        for(int j = 0 ; j < 3 ; j++) {
+            if(grid[j][i] == grid[j+1][i]){
+                grid[j][i] *= 2;
+                grid[j+1][i] = 0;
+            }
+        }
+    }
+}
+
+void Grid::downMerge() {
+    for(int i = 0 ; i < 4 ; i++) {
+        for(int j = 3 ; j > 0 ; j--) {
+            if(grid[j][i] == grid[j-1][i]){
+                grid[j][i] *= 2;
+                grid[j-1][i] = 0;
+            }
         }
     }
 }
