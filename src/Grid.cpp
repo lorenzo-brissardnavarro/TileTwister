@@ -83,7 +83,47 @@ void Grid::draw(SDL_Renderer* pRenderer) {
             int x = 105 + j * 100;
             int y = 105 + i * 100;
 
-            Tile tileGame(x, y, 90, 90, { 196, 181, 181, 255 });
+            SDL_Color color = { 196, 181, 181, 255 };
+
+            switch(grid[i][j]) {
+                case 2:
+                    color = { 238, 228, 218, 255 };
+                    break;
+                case 4:
+                    color = { 237, 224, 200, 255 };
+                    break;
+                case 8:
+                    color = { 242, 177, 121, 255 };
+                    break;
+                case 16:
+                    color = { 245, 149, 99, 255 };
+                    break;
+                case 32:
+                    color = { 246, 124, 95, 255 };
+                    break;
+                case 64:
+                    color = { 246, 94, 59, 255 };
+                    break;
+                case 128:
+                    color = { 237, 207, 114, 255 };
+                    break;
+                case 256:
+                    color = { 237, 204, 97, 255 };
+                    break;
+                case 512:
+                    color = { 237, 200, 80, 255 };
+                    break;
+                case 1024:
+                    color = { 237, 197, 63, 255 };
+                    break;
+                case 2048:
+                    color = { 237, 194, 46, 255 };
+                    break;
+                default:
+                    break;
+            }
+
+            Tile tileGame(x, y, 90, 90, color);
             tileGame.draw(pRenderer);
 
             if (grid[i][j] != 0) {
@@ -143,6 +183,8 @@ void Grid::downShift() {
         }
     }
 }
+
+
 
 
 // Destructeur pour libérer la mémoire
