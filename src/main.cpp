@@ -22,7 +22,7 @@ int main() {
                     open = false;
                     break;
                 case SDL_EVENT_KEY_DOWN:
-                    // game.manageKeyboard(events);
+                    game.manageKeyboard(events);
                     break;
             }
         }

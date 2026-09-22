@@ -5,12 +5,14 @@
 #include <SDL3_ttf/SDL_ttf.h>
 #include <string>
 #include <random>
+#include <vector>
+#include <iostream>
 
 class Grid {
 
 private:
 
-    int grid[4][4];
+    std::vector<std::vector<int>> grid;
     TTF_Font* font;
     std::mt19937 gen;
 
@@ -22,7 +24,10 @@ public:
     void draw(SDL_Renderer* pRenderer);
     void drawText(SDL_Renderer* pRenderer, std::string text, int x, int y);
     void addTile();
+    void leftShift();
     bool loadFont();
+
+    ~Grid();
 
 };
 

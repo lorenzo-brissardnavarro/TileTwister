@@ -19,21 +19,21 @@ void Game::startInterface(SDL_Renderer* pRenderer) {
 }
 
 
-// void Jeu::manageKeyboard(SDL_Event& event) {
-//     switch (event.key.key) {
-//         case SDLK_UP:
-//             grid.deplacerSelection(0, -1);
-//             break;
-//         case SDLK_DOWN:
-//             grid.deplacerSelection(0, 1);
-//             break;
-//         case SDLK_LEFT:
-//             grid.deplacerSelection(-1, 0);
-//             break;
-//         case SDLK_RIGHT:
-//             grid.deplacerSelection(1, 0);
-//             break;
-//         default:
-//             break;
-//     }
-// }
+void Game::manageKeyboard(SDL_Event& event) {
+    switch (event.key.key) {
+        case SDLK_UP:
+            grid.leftShift();
+            break;
+        case SDLK_DOWN:
+            grid.leftShift();
+            break;
+        case SDLK_LEFT:
+            grid.leftShift();
+            break;
+        case SDLK_RIGHT:
+            grid.leftShift();
+            break;
+        default:
+            break;
+    }
+}

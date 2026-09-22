@@ -3,11 +3,12 @@
 #include <iostream>
 #include <vector>
 #include <utility>
+#include <algorithm>
 using namespace std;
 
 
 Grid::Grid()
-    : grid{}, font(nullptr), gen(std::random_device{}())
+    : grid(4, std::vector<int>(4, 0)), font(nullptr), gen(std::random_device{}())
 {
 }
 
@@ -93,3 +94,18 @@ void Grid::draw(SDL_Renderer* pRenderer) {
 }
 
 
+void Grid::leftShift() {
+    for(int i = 0 ; i < 3 ; i++) {
+        stable_partition(grid[i].begin(), grid[i].end(), [](int n) { 
+            return n != 0; 
+        });
+    }
+}
+
+
+// Destructeur pour libérer la mémoire
+Grid::~Grid() {
+    if (font != nullptr) {
+        TTF_CloseFont(font);
+    }
+}
