@@ -22,16 +22,16 @@ void Game::startInterface(SDL_Renderer* pRenderer) {
 void Game::manageKeyboard(SDL_Event& event) {
     switch (event.key.key) {
         case SDLK_UP:
-            grid.upShift();
+            grid.move('u');
             break;
         case SDLK_DOWN:
-            grid.downShift();
+            grid.move('d');
             break;
         case SDLK_LEFT:
-            grid.leftShift();
+            grid.move('l');
             break;
         case SDLK_RIGHT:
-            grid.rightShift();
+            grid.move('r');
             break;
         default:
             break;

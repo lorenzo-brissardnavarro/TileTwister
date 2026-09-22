@@ -25,7 +25,10 @@ void Grid::initialize() {
             grid[i][j] = 0;
         }
     }
-
+    grid[0][0] = 2;
+    grid[1][0] = 2;
+    grid[2][0] = 2;
+    grid[3][0] = 2;
     addTile();
     addTile();
 }
@@ -140,7 +143,6 @@ void Grid::leftShift() {
             return n != 0; 
         });
     }
-    leftMerge();
 }
 
 void Grid::rightShift() {
@@ -149,43 +151,40 @@ void Grid::rightShift() {
             return n == 0; 
         });
     }
-    rightMerge();
+}
+
+void Grid::columnShift(int column, bool up) {
+    std::vector<int> temp(4);
+    for(int j = 0 ; j < 4 ; j++) {
+        temp[j] = grid[j][column];
+    }
+
+    if(up) {
+        stable_partition(temp.begin(), temp.end(), [](int n) {
+            return n != 0;
+        });
+    } else {
+        stable_partition(temp.begin(), temp.end(), [](int n) {
+            return n == 0;
+        });
+    }
+
+    for(int j = 0 ; j < 4 ; j++) {
+        grid[j][column] = temp[j];
+    }
 }
 
 void Grid::upShift() {
     for(int i = 0 ; i < 4 ; i++) {
-        std::vector<int> temp(4);
-        for(int j = 0 ; j < 4 ; j++) {
-            temp[j] = grid[j][i];
-        }
-
-        std::stable_partition(temp.begin(), temp.end(), [](int n) {
-            return n != 0; 
-        });
-
-        for(int j = 0 ; j < 4 ; j++) {
-            grid[j][i] = temp[j];
-        }
+        columnShift(i, true);
     }
-    upMerge();
 }
+
 
 void Grid::downShift() {
     for(int i = 0 ; i < 4 ; i++) {
-        std::vector<int> temp(4);
-        for(int j = 0 ; j < 4 ; j++) {
-            temp[j] = grid[j][i];
-        }
-
-        std::stable_partition(temp.begin(), temp.end(), [](int n) {
-            return n == 0; 
-        });
-
-        for(int j = 0 ; j < 4 ; j++) {
-            grid[j][i] = temp[j];
-        }
+        columnShift(i, false);
     }
-    downMerge();
 }
 
 
@@ -234,7 +233,33 @@ void Grid::downMerge() {
     }
 }
 
+void Grid::move(char direction) {
+    switch(direction) {
+        case 'l':
+            leftShift();
+            leftMerge();
+            leftShift();
+            break;
 
+        case 'r':
+            rightShift();
+            rightMerge();
+            rightShift();
+            break;
+
+        case 'u':
+            upShift();
+            upMerge();
+            upShift();
+            break;
+
+        case 'd':
+            downShift();
+            downMerge();
+            downShift();
+            break;
+    }
+}
 
 
 // Destructeur pour libérer la mémoire

@@ -32,6 +32,8 @@ public:
     void rightMerge();
     void upMerge();
     void downMerge();
+    void move(char direction);
+    void columnShift(int column, bool up);
     bool loadFont();
 
     ~Grid();
