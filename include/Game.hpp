@@ -8,11 +8,12 @@ class Game {
 
 private:
     Grid grid;
+    Image finalImage;
 
 public:
     Game();
 
-    void initialize(SDL_Renderer* pRenderer);
+    void initialize();
     void startInterface(SDL_Renderer* pRenderer);
     void manageKeyboard(SDL_Event& event);
 };

@@ -29,7 +29,8 @@ public:
     void merge(char direction);
     bool move(char direction);
     bool loadFont();
-    void setScore();
+    bool findNumber(int number);
+    bool shiftAvailable();
 
     ~Grid();
 

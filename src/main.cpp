@@ -9,7 +9,7 @@ int main() {
     window.initialize();
 
     Game game;
-    game.initialize(window.getRenderer());
+    game.initialize();
 
     SDL_Event events;
     bool open = true;

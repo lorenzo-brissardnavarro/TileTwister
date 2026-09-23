@@ -4,18 +4,26 @@
 using namespace std;
 
 Game::Game()
+    : finalImage(0, 0, 600, 600)
 {
 }
 
 
-void Game::initialize(SDL_Renderer* pRenderer) {
+void Game::initialize() {
     grid.initialize();
     grid.loadFont();
 
 }
 
 void Game::startInterface(SDL_Renderer* pRenderer) {
-    grid.draw(pRenderer);
+    if(grid.findNumber(2048)) {
+        finalImage.draw(pRenderer, "images/victory.png");
+    } else if(!grid.findNumber(0) && !grid.shiftAvailable()) {
+        finalImage.draw(pRenderer, "images/defeat.png");
+    } else {
+        grid.draw(pRenderer);
+    }
+    
 }
 
 

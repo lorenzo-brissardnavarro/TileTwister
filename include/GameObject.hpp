@@ -14,12 +14,11 @@ protected:
     int coordinateY;
     int sizeX;
     int sizeY;
-    const SDL_Color& color;
 
 public:
 
     // Constructeur de la classe abstraite
-    GameObject(int coordinateX, int coordinateY, int sizeX, int sizeY, const SDL_Color& color);
+    GameObject(int coordinateX, int coordinateY, int sizeX, int sizeY);
 
     virtual void draw(SDL_Renderer* pRenderer) = 0;
 };
@@ -28,11 +27,28 @@ public:
 // Classe enfant tuile qui hérite de la classe GameObject
 class Tile : public GameObject {
 
+private:
+    const SDL_Color& color;
+
 public:
 
     Tile(int coordinateX, int coordinateY, int sizeX, int sizeY, const SDL_Color& color);
 
     void draw(SDL_Renderer* pRenderer) override;
+};
+
+
+// Classe enfant image qui hérite de la classe GameObject
+class Image : public GameObject {
+
+public:
+
+    using GameObject::draw;
+
+    Image(int coordinateX, int coordinateY, int sizeX, int sizeY);
+
+    void draw(SDL_Renderer* pRenderer) override;
+    void draw(SDL_Renderer* pRenderer, std::string path);
 };
 
 #endif

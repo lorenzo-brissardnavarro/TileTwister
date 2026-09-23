@@ -252,6 +252,30 @@ bool Grid::move(char direction) {
     return oldGrid != grid;
 }
 
+bool Grid::findNumber(int number) {
+    for(int i = 0 ; i < 4 ; i++) {
+        for(int j = 0 ; j < 4 ; j++) {
+            if(grid[i][j] == number){
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+bool Grid::shiftAvailable() {
+    for(int i = 0 ; i < 4 ; i++) {
+        for(int j = 0 ; j < 3 ; j++) {
+            if((grid[i][j] == grid[i][j+1]) || (grid[j][i] == grid[j+1][i])){
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+
+
 
 // Destructeur pour libérer la mémoire
 Grid::~Grid() {
