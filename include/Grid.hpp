@@ -17,6 +17,7 @@ private:
     TTF_Font* font;
     std::mt19937 gen;
     int score;
+    int target;
 
 public:
 
@@ -25,6 +26,7 @@ public:
     void initialize();
     void draw(SDL_Renderer* pRenderer);
     void drawText(SDL_Renderer* pRenderer, std::string text, int x, int y);
+    void drawChoice(SDL_Renderer* pRenderer);
     void addTile();
     void shift(char direction);
     void merge(char direction);
@@ -33,6 +35,9 @@ public:
     bool findNumber(int number);
     bool shiftAvailable();
     void newGame();
+    void setTarget(int value);
+    int getTarget();
+    void choice(int x, int y);
 
     ~Grid();
 

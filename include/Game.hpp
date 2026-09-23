@@ -10,6 +10,7 @@ class Game {
 private:
     Grid grid;
     Image finalImage;
+    bool targetSelected;
 
 public:
     Game();
@@ -17,6 +18,7 @@ public:
     void initialize();
     void startInterface(SDL_Renderer* pRenderer);
     void manageKeyboard(SDL_Event& event);
+    
 };
 
 #endif

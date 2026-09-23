@@ -5,7 +5,7 @@ using namespace std;
 
 // Constructor by initialisation list : Game
 Game::Game()
-    : finalImage(0, 0, 600, 600)
+    : finalImage(0, 0, 600, 600), targetSelected(false)
 {
 }
 
@@ -20,20 +20,35 @@ void Game::initialize() {
 
 // Method that manages the display based on the progress of the game
 void Game::startInterface(SDL_Renderer* pRenderer) {
-    if(grid.findNumber(2048)) {
+    if(!targetSelected) {
+        grid.drawChoice(pRenderer);
+        return;
+    }
+
+    if(grid.findNumber(grid.getTarget())) {
         finalImage.draw(pRenderer, "images/victory.png");
     } else if(!grid.findNumber(0) && !grid.shiftAvailable()) {
         finalImage.draw(pRenderer, "images/defeat.png");
     } else {
         grid.draw(pRenderer);
     }
-    
 }
 
 
 // Method that retrieves the keyboard key and calls the appropriate method
 void Game::manageKeyboard(SDL_Event& event) {
     char direction;
+    // We retrieve the coordinates of left-click events
+    if(!targetSelected) {
+        if(event.type == SDL_EVENT_MOUSE_BUTTON_DOWN && event.button.button == SDL_BUTTON_LEFT) {
+            grid.choice(event.button.x, event.button.y);
+            if(grid.getTarget() != 0) {
+                targetSelected = true;
+                grid.newGame();
+            }
+        }
+        return;
+    }
     switch (event.key.key) {
         case SDLK_UP:
             direction = 'u';
@@ -49,7 +64,8 @@ void Game::manageKeyboard(SDL_Event& event) {
             break;
         case SDLK_R:
             grid.newGame();
-            break;
+            this->targetSelected = false;
+            return;
         default:
             return;
     }

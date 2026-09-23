@@ -26,6 +26,9 @@ int main() {
                 case SDL_EVENT_KEY_DOWN:
                     game.manageKeyboard(events);
                     break;
+                case SDL_EVENT_MOUSE_BUTTON_DOWN:
+                    game.manageKeyboard(events);
+                    break;
             }
         }
         SDL_SetRenderDrawColor(window.getRenderer(), 255, 255, 255, 255);

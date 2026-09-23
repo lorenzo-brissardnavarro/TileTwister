@@ -8,14 +8,14 @@ using namespace std;
 
 // Constructor by initialisation list : Grid
 Grid::Grid()
-    : grid(4, std::vector<int>(4, 0)), font(nullptr), gen(std::random_device{}()), score(0)
+    : grid(4, std::vector<int>(4, 0)), font(nullptr), gen(std::random_device{}()), score(0), target(0)
 {
 }
 
 
 // Method for loading the font contained in the “fonts” folder
 bool Grid::loadFont() {
-    font = TTF_OpenFont("fonts/BebasNeue-Regular.ttf", 48);
+    font = TTF_OpenFont("fonts/BebasNeue-Regular.ttf", 40);
     return font != nullptr;
 }
 
@@ -85,7 +85,8 @@ void Grid::drawText(SDL_Renderer* pRenderer, std::string text, int x, int y) {
 void Grid::draw(SDL_Renderer* pRenderer) {
 
     //The live score is displayed
-    drawText(pRenderer, "Score : " + std::to_string(this->score), 105, 30);
+    drawText(pRenderer, "Score : " + std::to_string(this->score), 115, 30);
+    drawText(pRenderer, "Objectif : " + std::to_string(this->target), 360, 30);
     
     // We create the background of the game board
     Tile boardGame(75, 125, 450, 450, { 136, 129, 129, 255 });
@@ -105,34 +106,40 @@ void Grid::draw(SDL_Renderer* pRenderer) {
                     color = { 238, 228, 218, 255 };
                     break;
                 case 4:
-                    color = { 237, 224, 200, 255 };
+                    color = { 232, 220, 200, 255 };
                     break;
                 case 8:
-                    color = { 242, 177, 121, 255 };
+                    color = { 255, 183, 120, 255 };
                     break;
                 case 16:
-                    color = { 245, 149, 99, 255 };
+                    color = { 255, 150, 90, 255 };
                     break;
                 case 32:
-                    color = { 246, 124, 95, 255 };
+                    color = { 255, 120, 80, 255 };
                     break;
                 case 64:
-                    color = { 246, 94, 59, 255 };
+                    color = { 255, 90, 60, 255 };
                     break;
                 case 128:
-                    color = { 237, 207, 114, 255 };
+                    color = { 240, 180, 70, 255 };
                     break;
                 case 256:
-                    color = { 237, 204, 97, 255 };
+                    color = { 255, 160, 50, 255 };
                     break;
                 case 512:
-                    color = { 237, 200, 80, 255 };
+                    color = { 255, 130, 40, 255 };
                     break;
                 case 1024:
-                    color = { 237, 197, 63, 255 };
+                    color = { 220, 80, 120, 255 };
                     break;
                 case 2048:
-                    color = { 237, 194, 46, 255 };
+                    color = { 180, 60, 160, 255 };
+                    break;
+                case 4096:
+                    color = { 140, 50, 200, 255 };
+                    break;
+                case 8192:
+                    color = { 100, 40, 220, 255 };
                     break;
                 default:
                     break;
@@ -147,6 +154,19 @@ void Grid::draw(SDL_Renderer* pRenderer) {
                 drawText(pRenderer, std::to_string(grid[i][j]), x, y);
             }
         }
+    }
+}
+
+
+// Method for the opening screen to select the tile to reach in order to win the game
+void Grid::drawChoice(SDL_Renderer* pRenderer) {
+    drawText(pRenderer, "Votre objectif", 260, 30);
+    int choices[] = { 1024, 2048, 8192 };
+    SDL_Color colors[] = {{ 220, 80, 120, 255 }, { 180, 60, 160, 255 }, { 100, 40, 220, 255 }};
+    for(int i = 0 ; i < 3 ; i++) {
+        Tile choice(240, (i + 1) * 150, 120, 120, colors[i]);
+        choice.draw(pRenderer);
+        drawText(pRenderer, std::to_string(choices[i]), 255, (i + 1) * 150 + 15);
     }
 }
 
@@ -305,6 +325,30 @@ bool Grid::shiftAvailable() {
 void Grid::newGame() {
     initialize();
     this->score = 0;
+}
+
+
+// Setter to change the target value
+void Grid::setTarget(int value) {
+    this->target = value;
+}
+
+
+// Getter to retrieve the target value
+int Grid::getTarget() {
+    return this->target;
+}
+
+
+// A method for determining, based on the position on the screen, what the objective is for that game
+void Grid::choice(int x, int y) {
+    if(x >= 240 && x <= 360 && y >= 150 && y <= 270) {
+        this->target = 1024;
+    } else if(x >= 240 && x <= 360 && y >= 300 && y <= 420) {
+        this->target = 2048;
+    } else if(x >= 240 && x <= 360 && y >= 450 && y <= 570) {
+        this->target = 8192;
+    }
 }
 
 
