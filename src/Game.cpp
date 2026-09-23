@@ -42,6 +42,9 @@ void Game::manageKeyboard(SDL_Event& event) {
         case SDLK_RIGHT:
             direction = 'r';
             break;
+        case SDLK_R:
+            grid.newGame();
+            break;
         default:
             return;
     }

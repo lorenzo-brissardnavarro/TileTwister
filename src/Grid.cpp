@@ -274,6 +274,11 @@ bool Grid::shiftAvailable() {
     return false;
 }
 
+void Grid::newGame() {
+    initialize();
+    this->score = 0;
+}
+
 
 
 

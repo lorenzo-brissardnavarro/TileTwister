@@ -31,6 +31,7 @@ public:
     bool loadFont();
     bool findNumber(int number);
     bool shiftAvailable();
+    void newGame();
 
     ~Grid();
 
