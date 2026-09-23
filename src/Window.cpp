@@ -4,13 +4,14 @@
 using namespace std;
 
 
-// Constructeur liste d'initiation
+// Constructor by initialisation list : Window
 Window::Window(std::string title, int width, int height)
     : title(title), width(width), height(height), pWindow(nullptr), pRenderer(nullptr)
 {
 }
 
-// Méthode pour initialiser la fenêtre
+
+// Method for initialising the window
 bool Window::initialize() {
     if (!SDL_Init(SDL_INIT_VIDEO)) {         
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[DEBUG] > %s", SDL_GetError());         
@@ -38,18 +39,20 @@ bool Window::initialize() {
     return true;     
 }
 
-// Getter pour récupérer le pointeur
+
+// Getter to retrieve the pointer
 SDL_Renderer* Window::getRenderer(){
     return this->pRenderer;
 }
 
-// Getter pour récupérer le pointeur
+
+// Getter to retrieve the pointer
 SDL_Window* Window::getWindow(){
     return this->pWindow;
 }
 
 
-// Destructeur pour libérer la mémoire
+// The destructor to free memory
 Window::~Window() {
     if (pRenderer != nullptr) {
         SDL_DestroyRenderer(pRenderer);

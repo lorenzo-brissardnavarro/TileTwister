@@ -6,19 +6,21 @@
 #include <algorithm>
 using namespace std;
 
-
+// Constructor by initialisation list : Grid
 Grid::Grid()
     : grid(4, std::vector<int>(4, 0)), font(nullptr), gen(std::random_device{}()), score(0)
 {
 }
 
 
-
+// Method for loading the font contained in the “fonts” folder
 bool Grid::loadFont() {
     font = TTF_OpenFont("fonts/BebasNeue-Regular.ttf", 48);
     return font != nullptr;
 }
 
+
+// Method for initialising the grid by filling it with zeros and placing the two starting tiles
 void Grid::initialize() {
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 4; j++) {
@@ -30,9 +32,10 @@ void Grid::initialize() {
 }
 
 
+// Method for adding a random tile to the grid
 void Grid::addTile() {
-    std::uniform_int_distribution<int> distribPosition(0, 3);
-    std::uniform_int_distribution<int> distribValue(1, 10);
+    std::uniform_int_distribution<int> distribPosition(0, 3); // A random number between 0 and 3 for the position
+    std::uniform_int_distribution<int> distribValue(1, 10); // A random number to determine the tile’s value (2 or 4) based on probabilities
 
     int row;
     int column;
@@ -42,6 +45,7 @@ void Grid::addTile() {
         column = distribPosition(gen);
     } while (grid[row][column] != 0);
 
+    // 90% chance of a 2 appearing and 10% chance of a 4 appearing
     if (distribValue(gen) <= 9) {
         grid[row][column] = 2;
     } else {
@@ -50,6 +54,7 @@ void Grid::addTile() {
 }
 
 
+// Method for displaying text
 void Grid::drawText(SDL_Renderer* pRenderer, std::string text, int x, int y) {
     SDL_Color color = { 0, 0, 0, 255 };
 
@@ -63,6 +68,8 @@ void Grid::drawText(SDL_Renderer* pRenderer, std::string text, int x, int y) {
         SDL_DestroySurface(surface);
         return;
     }
+
+    // The number is centred relative to the tile’s size
     float texteX = x + (90 - surface->w) / 2.0f;
     float texteY = y + (90 - surface->h) / 2.0f;
 
@@ -74,10 +81,17 @@ void Grid::drawText(SDL_Renderer* pRenderer, std::string text, int x, int y) {
 }
 
 
+// Method for displaying the grid
 void Grid::draw(SDL_Renderer* pRenderer) {
+
+    //The live score is displayed
     drawText(pRenderer, "Score : " + std::to_string(this->score), 105, 30);
+    
+    // We create the background of the game board
     Tile boardGame(75, 125, 450, 450, { 136, 129, 129, 255 });
     boardGame.draw(pRenderer);
+
+    // We go through our 16 cell
     for (int i = 0; i < 4; ++i) {
         for (int j = 0; j < 4; ++j) {
             int x = 105 + j * 100;
@@ -85,6 +99,7 @@ void Grid::draw(SDL_Renderer* pRenderer) {
 
             SDL_Color color = { 196, 181, 181, 255 };
 
+            // The colour of the tile is determined by the value in the cell
             switch(grid[i][j]) {
                 case 2:
                     color = { 238, 228, 218, 255 };
@@ -123,9 +138,11 @@ void Grid::draw(SDL_Renderer* pRenderer) {
                     break;
             }
 
+            // For each cell in the grid, a tile is created and displayed
             Tile tileGame(x, y, 90, 90, color);
             tileGame.draw(pRenderer);
 
+            // If the cell contains a value, it is displayed on top of the tile
             if (grid[i][j] != 0) {
                 drawText(pRenderer, std::to_string(grid[i][j]), x, y);
             }
@@ -134,10 +151,10 @@ void Grid::draw(SDL_Renderer* pRenderer) {
 }
 
 
-
-
+// Method for managing movements by sorting the grid
 void Grid::shift(char direction) {
     switch(direction) {
+        // All the numbers in the row are shifted to the left
         case 'l':
             for(int i = 0 ; i < 4 ; i++) {
                 stable_partition(grid[i].begin(), grid[i].end(), [](int n) {
@@ -146,6 +163,7 @@ void Grid::shift(char direction) {
             }
             break;
 
+        // All the numbers in the row are shifted to the right
         case 'r':
             for(int i = 0 ; i < 4 ; i++) {
                 stable_partition(grid[i].begin(), grid[i].end(), [](int n) {
@@ -154,6 +172,7 @@ void Grid::shift(char direction) {
             }
             break;
 
+        // The numbers in the column are grouped together before being sorted from left to right
         case 'u':
             for(int i = 0 ; i < 4 ; i++) {
                 std::vector<int> temp(4);
@@ -169,6 +188,7 @@ void Grid::shift(char direction) {
             }
             break;
 
+        // The numbers in the column are grouped together before being sorted from right to left
         case 'd':
             for(int i = 0 ; i < 4 ; i++) {
                 std::vector<int> temp(4);
@@ -187,11 +207,10 @@ void Grid::shift(char direction) {
 }
 
 
-
-
-
+// Method for calculating the merging of two tiles along a given direction
 void Grid::merge(char direction) {
     switch(direction) {
+        // We scan the line from left to right
         case 'l':
             for(int i = 0 ; i < 4 ; i++) {
                 for(int j = 0 ; j < 3 ; j++) {
@@ -204,6 +223,7 @@ void Grid::merge(char direction) {
             }
             break;
 
+        // We scan the line from right to left
         case 'r':
             for(int i = 0 ; i < 4 ; i++) {
                 for(int j = 3 ; j > 0 ; j--) {
@@ -216,6 +236,7 @@ void Grid::merge(char direction) {
             }
             break;
 
+        // We scan the column from left to right
         case 'u':
             for(int i = 0 ; i < 4 ; i++) {
                 for(int j = 0 ; j < 3 ; j++) {
@@ -228,6 +249,7 @@ void Grid::merge(char direction) {
             }
             break;
 
+        // We scan the column from right to left
         case 'd':
             for(int i = 0 ; i < 4 ; i++) {
                 for(int j = 3 ; j > 0 ; j--) {
@@ -243,15 +265,17 @@ void Grid::merge(char direction) {
 }
 
 
-
+// Method for managing correct movement and merging according to direction
 bool Grid::move(char direction) {
     auto oldGrid = grid;
     shift(direction);
-    merge(direction);
-    shift(direction);
-    return oldGrid != grid;
+    merge(direction); 
+    shift(direction); // Move again after a merge
+    return oldGrid != grid; // We check if the grid has changed and therefore if we need to add a new tile or not
 }
 
+
+// Method for searching for a specific value in the grid (used for 0 and 2048 in particular)
 bool Grid::findNumber(int number) {
     for(int i = 0 ; i < 4 ; i++) {
         for(int j = 0 ; j < 4 ; j++) {
@@ -263,6 +287,8 @@ bool Grid::findNumber(int number) {
     return false;
 }
 
+
+// Method for checking if you can still make a move and therefore the game is not over
 bool Grid::shiftAvailable() {
     for(int i = 0 ; i < 4 ; i++) {
         for(int j = 0 ; j < 3 ; j++) {
@@ -274,15 +300,15 @@ bool Grid::shiftAvailable() {
     return false;
 }
 
+
+// Method for starting a new game
 void Grid::newGame() {
     initialize();
     this->score = 0;
 }
 
 
-
-
-// Destructeur pour libérer la mémoire
+// The destructor to free memory
 Grid::~Grid() {
     if (font != nullptr) {
         TTF_CloseFont(font);

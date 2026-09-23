@@ -18,9 +18,11 @@ int main() {
     while (open) {
         while (SDL_PollEvent(&events)) {
             switch (events.type) {
+                // if you click on the cross, the window closes
                 case SDL_EVENT_QUIT:
                     open = false;
                     break;
+                // we listen for other events, including those from the keyboard
                 case SDL_EVENT_KEY_DOWN:
                     game.manageKeyboard(events);
                     break;

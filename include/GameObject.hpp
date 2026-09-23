@@ -6,7 +6,7 @@
 #include <SDL3_image/SDL_image.h>
 #include <string>
 
-// Classe abstraite
+// An abstract class representing an element displayed in the graphical user interface
 class GameObject {
 
 protected:
@@ -17,14 +17,14 @@ protected:
 
 public:
 
-    // Constructeur de la classe abstraite
+    // Constructor of the abstract class
     GameObject(int coordinateX, int coordinateY, int sizeX, int sizeY);
 
     virtual void draw(SDL_Renderer* pRenderer) = 0;
 };
 
 
-// Classe enfant tuile qui hérite de la classe GameObject
+// Child class that inherits from the parent class
 class Tile : public GameObject {
 
 private:
@@ -38,7 +38,7 @@ public:
 };
 
 
-// Classe enfant image qui hérite de la classe GameObject
+// Child class that inherits from the parent class
 class Image : public GameObject {
 
 public:
@@ -48,7 +48,7 @@ public:
     Image(int coordinateX, int coordinateY, int sizeX, int sizeY);
 
     void draw(SDL_Renderer* pRenderer) override;
-    void draw(SDL_Renderer* pRenderer, std::string path);
+    void draw(SDL_Renderer* pRenderer, std::string path); // overload
 };
 
 #endif

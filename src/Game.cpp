@@ -3,18 +3,22 @@
 #include <string>
 using namespace std;
 
+// Constructor by initialisation list : Game
 Game::Game()
     : finalImage(0, 0, 600, 600)
 {
 }
 
 
+// We call the methods to initialise the grid and load the font
 void Game::initialize() {
     grid.initialize();
     grid.loadFont();
 
 }
 
+
+// Method that manages the display based on the progress of the game
 void Game::startInterface(SDL_Renderer* pRenderer) {
     if(grid.findNumber(2048)) {
         finalImage.draw(pRenderer, "images/victory.png");
@@ -27,6 +31,7 @@ void Game::startInterface(SDL_Renderer* pRenderer) {
 }
 
 
+// Method that retrieves the keyboard key and calls the appropriate method
 void Game::manageKeyboard(SDL_Event& event) {
     char direction;
     switch (event.key.key) {
@@ -48,6 +53,7 @@ void Game::manageKeyboard(SDL_Event& event) {
         default:
             return;
     }
+    // If a move has been made, a new tile is added
     if (grid.move(direction))
         grid.addTile();
         

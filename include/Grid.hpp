@@ -8,6 +8,7 @@
 #include <vector>
 #include <iostream>
 
+// Class representing the game grid as a two-dimensional vector
 class Grid {
 
 private:
