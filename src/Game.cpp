@@ -24,7 +24,6 @@ void Game::startInterface(SDL_Renderer* pRenderer) {
         grid.drawChoice(pRenderer);
         return;
     }
-
     if(grid.findNumber(grid.getTarget())) {
         this->gameInProgress = false;
         finalImage.draw(pRenderer, "images/victory.png");

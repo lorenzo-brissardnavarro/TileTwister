@@ -3,6 +3,7 @@
 
 #include "Grid.hpp"
 #include "GameObject.hpp"
+#include "Window.hpp"
 
 // Contains the grid and is responsible for displaying it and detecting keys pressed on the keyboard
 class Game {

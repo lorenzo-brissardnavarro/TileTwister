@@ -41,22 +41,24 @@ void Image::draw(SDL_Renderer* pRenderer){
 
 // Overload method for displaying an image, as we need the path
 void Image::draw(SDL_Renderer* pRenderer, std::string path) {
-    // SDL_Surface* surface = IMG_Load(path.c_str());
-    // if (surface == nullptr) {
-    //     return;
-    // }
-        
-    // SDL_Texture* texture = SDL_CreateTextureFromSurface(pRenderer, surface);
-     SDL_Texture* texture = IMG_LoadTexture(pRenderer, path.c_str());
-    // if (texture == nullptr) {
-    //     SDL_DestroySurface(surface);
-    //     return;
-    // }
-
+    SDL_Texture* texture = IMG_LoadTexture(pRenderer, path.c_str());
     SDL_FRect destination = {(float)this->coordinateX, (float)this->coordinateY, (float)this->sizeX, (float)this->sizeY};
     SDL_RenderTexture(pRenderer, texture, nullptr, &destination);
-
     SDL_DestroyTexture(texture);
-    // SDL_DestroySurface(surface);
 }
 
+
+int Image::getCoordinateX() {
+    return this->coordinateX;
+}
+
+
+
+int Image::getSizeX() {
+    return this->sizeX;
+}
+
+
+void Image::setCoordinateX(int value) {
+    this->coordinateX = value;
+}

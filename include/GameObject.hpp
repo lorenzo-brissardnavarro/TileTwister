@@ -49,6 +49,9 @@ public:
 
     void draw(SDL_Renderer* pRenderer) override;
     void draw(SDL_Renderer* pRenderer, std::string path); // overload
+    int getCoordinateX();
+    int getSizeX();
+    void setCoordinateX(int value);
 };
 
 #endif
