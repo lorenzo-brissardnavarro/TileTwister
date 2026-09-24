@@ -5,7 +5,7 @@ using namespace std;
 
 // Constructor by initialisation list : Game
 Game::Game()
-    : finalImage(0, 0, 600, 600), targetSelected(false)
+    : finalImage(0, 0, 600, 600), targetSelected(false), gameInProgress(true)
 {
 }
 
@@ -26,9 +26,15 @@ void Game::startInterface(SDL_Renderer* pRenderer) {
     }
 
     if(grid.findNumber(grid.getTarget())) {
+        this->gameInProgress = false;
         finalImage.draw(pRenderer, "images/victory.png");
+        grid.setFontSize(45);
+        grid.drawText(pRenderer, std::to_string(grid.getScore()), 300, 250, { 251, 231, 213, 255 });
     } else if(!grid.findNumber(0) && !grid.shiftAvailable()) {
+        this->gameInProgress = false;
         finalImage.draw(pRenderer, "images/defeat.png");
+        grid.setFontSize(45);
+        grid.drawText(pRenderer, std::to_string(grid.getScore()), 250, 265, { 251, 231, 213, 255 });
     } else {
         grid.draw(pRenderer);
     }
@@ -49,26 +55,35 @@ void Game::manageKeyboard(SDL_Event& event) {
         }
         return;
     }
-    switch (event.key.key) {
-        case SDLK_UP:
-            direction = 'u';
-            break;
-        case SDLK_DOWN:
-            direction = 'd';
-            break;
-        case SDLK_LEFT:
-            direction = 'l';
-            break;
-        case SDLK_RIGHT:
-            direction = 'r';
-            break;
-        case SDLK_R:
-            grid.newGame();
-            this->targetSelected = false;
-            return;
-        default:
-            return;
+    if(gameInProgress) {
+        switch (event.key.key) {
+            case SDLK_UP:
+                direction = 'u';
+                break;
+            case SDLK_DOWN:
+                direction = 'd';
+                break;
+            case SDLK_LEFT:
+                direction = 'l';
+                break;
+            case SDLK_RIGHT:
+                direction = 'r';
+                break;
+            default:
+                return;
+        }
+    } else {
+        switch (event.key.key) {
+            case SDLK_R:
+                grid.newGame();
+                this->targetSelected = false;
+                this->gameInProgress = true;
+                return;
+            default:
+                return;
+        }
     }
+    
     // If a move has been made, a new tile is added
     if (grid.move(direction))
         grid.addTile();

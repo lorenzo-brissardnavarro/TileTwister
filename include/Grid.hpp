@@ -25,7 +25,7 @@ public:
 
     void initialize();
     void draw(SDL_Renderer* pRenderer);
-    void drawText(SDL_Renderer* pRenderer, std::string text, int x, int y);
+    void drawText(SDL_Renderer* pRenderer, std::string text, int x, int y, const SDL_Color& color);
     void drawChoice(SDL_Renderer* pRenderer);
     void addTile();
     void shift(char direction);
@@ -37,6 +37,8 @@ public:
     void newGame();
     void setTarget(int value);
     int getTarget();
+    int getScore();
+    void setFontSize(int value);
     void choice(int x, int y);
 
     ~Grid();

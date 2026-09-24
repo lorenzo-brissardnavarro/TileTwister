@@ -11,6 +11,7 @@ private:
     Grid grid;
     Image finalImage;
     bool targetSelected;
+    bool gameInProgress;
 
 public:
     Game();

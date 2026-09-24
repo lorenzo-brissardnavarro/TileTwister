@@ -15,7 +15,7 @@ Grid::Grid()
 
 // Method for loading the font contained in the “fonts” folder
 bool Grid::loadFont() {
-    font = TTF_OpenFont("fonts/BebasNeue-Regular.ttf", 40);
+    font = TTF_OpenFont("fonts/PressStart2P-Regular.ttf", 20);
     return font != nullptr;
 }
 
@@ -55,9 +55,8 @@ void Grid::addTile() {
 
 
 // Method for displaying text
-void Grid::drawText(SDL_Renderer* pRenderer, std::string text, int x, int y) {
-    SDL_Color color = { 0, 0, 0, 255 };
-
+void Grid::drawText(SDL_Renderer* pRenderer, std::string text, int x, int y, const SDL_Color& color) {
+    SDL_SetRenderDrawColor(pRenderer, color.r, color.g, color.b, color.a);
     SDL_Surface* surface = TTF_RenderText_Blended(font, text.c_str(), 0, color);
     if (surface == nullptr) {
         return;
@@ -85,8 +84,19 @@ void Grid::drawText(SDL_Renderer* pRenderer, std::string text, int x, int y) {
 void Grid::draw(SDL_Renderer* pRenderer) {
 
     //The live score is displayed
-    drawText(pRenderer, "Score : " + std::to_string(this->score), 115, 30);
-    drawText(pRenderer, "Objectif : " + std::to_string(this->target), 360, 30);
+    drawText(pRenderer, "Score : " + std::to_string(this->score), 90, 30, { 0, 0, 0, 255 });
+    drawText(pRenderer, "Objectif : ", 335, 30, { 0, 0, 0, 255 });
+    SDL_Color color = { 0, 0, 0, 255 };
+    if(target == 1024) {
+        color = { 220, 80, 120, 255 };
+    } else if (target == 2048) {
+        color = { 180, 60, 160, 255 };
+    } else {
+        color = { 100, 40, 220, 255 };
+    }
+    Tile tileTarget(455, 25, 90, 90, color);
+    tileTarget.draw(pRenderer);
+    drawText(pRenderer, std::to_string(this->target), 455, 25, { 0, 0, 0, 255 });
     
     // We create the background of the game board
     Tile boardGame(75, 125, 450, 450, { 136, 129, 129, 255 });
@@ -151,7 +161,7 @@ void Grid::draw(SDL_Renderer* pRenderer) {
 
             // If the cell contains a value, it is displayed on top of the tile
             if (grid[i][j] != 0) {
-                drawText(pRenderer, std::to_string(grid[i][j]), x, y);
+                drawText(pRenderer, std::to_string(grid[i][j]), x, y, { 0, 0, 0, 255 });
             }
         }
     }
@@ -160,13 +170,13 @@ void Grid::draw(SDL_Renderer* pRenderer) {
 
 // Method for the opening screen to select the tile to reach in order to win the game
 void Grid::drawChoice(SDL_Renderer* pRenderer) {
-    drawText(pRenderer, "Votre objectif", 260, 30);
+    drawText(pRenderer, "Votre objectif", 260, 30, { 0, 0, 0, 255 });
     int choices[] = { 1024, 2048, 8192 };
     SDL_Color colors[] = {{ 220, 80, 120, 255 }, { 180, 60, 160, 255 }, { 100, 40, 220, 255 }};
     for(int i = 0 ; i < 3 ; i++) {
         Tile choice(240, (i + 1) * 150, 120, 120, colors[i]);
         choice.draw(pRenderer);
-        drawText(pRenderer, std::to_string(choices[i]), 255, (i + 1) * 150 + 15);
+        drawText(pRenderer, std::to_string(choices[i]), 255, (i + 1) * 150 + 15, { 0, 0, 0, 255 });
     }
 }
 
@@ -325,6 +335,7 @@ bool Grid::shiftAvailable() {
 void Grid::newGame() {
     initialize();
     this->score = 0;
+    setFontSize(20);
 }
 
 
@@ -334,9 +345,24 @@ void Grid::setTarget(int value) {
 }
 
 
+// Setter to change the font's size
+void Grid::setFontSize(int value) {
+    float newSize = value; 
+    if (!TTF_SetFontSize(this->font, newSize)) {
+        std::cerr << "Erreur lors du changement de taille: " << SDL_GetError() << std::endl;
+    }
+}
+
+
 // Getter to retrieve the target value
 int Grid::getTarget() {
     return this->target;
+}
+
+
+// Getter to retrieve the score value
+int Grid::getScore() {
+    return this->score;
 }
 
 
