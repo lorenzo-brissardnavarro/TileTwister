@@ -31,7 +31,7 @@ int main() {
                     break;
             }
         }
-        SDL_SetRenderDrawColor(window.getRenderer(), 255, 255, 255, 255);
+        SDL_SetRenderDrawColor(window.getRenderer(), 14, 36, 51, 255);
         SDL_RenderClear(window.getRenderer());
 
         game.startInterface(window.getRenderer());

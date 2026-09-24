@@ -29,12 +29,12 @@ void Game::startInterface(SDL_Renderer* pRenderer) {
         this->gameInProgress = false;
         finalImage.draw(pRenderer, "images/victory.png");
         grid.setFontSize(45);
-        grid.drawText(pRenderer, std::to_string(grid.getScore()), 300, 250, { 251, 231, 213, 255 });
+        grid.drawText(pRenderer, std::to_string(grid.getScore()), 300, 250, { 255, 255, 255, 255 });
     } else if(!grid.findNumber(0) && !grid.shiftAvailable()) {
         this->gameInProgress = false;
         finalImage.draw(pRenderer, "images/defeat.png");
         grid.setFontSize(45);
-        grid.drawText(pRenderer, std::to_string(grid.getScore()), 250, 265, { 251, 231, 213, 255 });
+        grid.drawText(pRenderer, std::to_string(grid.getScore()), 250, 255, { 255, 255, 255, 255 });
     } else {
         grid.draw(pRenderer);
     }

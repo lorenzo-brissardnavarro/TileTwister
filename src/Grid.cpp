@@ -84,8 +84,8 @@ void Grid::drawText(SDL_Renderer* pRenderer, std::string text, int x, int y, con
 void Grid::draw(SDL_Renderer* pRenderer) {
 
     //The live score is displayed
-    drawText(pRenderer, "Score : " + std::to_string(this->score), 90, 30, { 0, 0, 0, 255 });
-    drawText(pRenderer, "Objectif : ", 335, 30, { 0, 0, 0, 255 });
+    drawText(pRenderer, "Score : " + std::to_string(this->score), 90, 30, { 255, 255, 0, 255 });
+    drawText(pRenderer, "Objectif : ", 340, 30, { 255, 255, 0, 255 });
     SDL_Color color = { 0, 0, 0, 255 };
     if(target == 1024) {
         color = { 220, 80, 120, 255 };
@@ -94,12 +94,12 @@ void Grid::draw(SDL_Renderer* pRenderer) {
     } else {
         color = { 100, 40, 220, 255 };
     }
-    Tile tileTarget(455, 25, 90, 90, color);
+    Tile tileTarget(460, 25, 90, 90, color);
     tileTarget.draw(pRenderer);
-    drawText(pRenderer, std::to_string(this->target), 455, 25, { 0, 0, 0, 255 });
+    drawText(pRenderer, std::to_string(this->target), 460, 25, { 0, 0, 0, 255 });
     
     // We create the background of the game board
-    Tile boardGame(75, 125, 450, 450, { 136, 129, 129, 255 });
+    Tile boardGame(75, 125, 450, 450, { 28, 73, 102, 255 });
     boardGame.draw(pRenderer);
 
     // We go through our 16 cell
@@ -108,7 +108,7 @@ void Grid::draw(SDL_Renderer* pRenderer) {
             int x = 105 + j * 100;
             int y = 155 + i * 100;
 
-            SDL_Color color = { 196, 181, 181, 255 };
+            SDL_Color color = { 41, 109, 152, 255 };
 
             // The colour of the tile is determined by the value in the cell
             switch(grid[i][j]) {
@@ -170,13 +170,13 @@ void Grid::draw(SDL_Renderer* pRenderer) {
 
 // Method for the opening screen to select the tile to reach in order to win the game
 void Grid::drawChoice(SDL_Renderer* pRenderer) {
-    drawText(pRenderer, "Votre objectif", 260, 30, { 0, 0, 0, 255 });
+    drawText(pRenderer, "Votre objectif", 260, 30, { 255, 255, 0, 255 });
     int choices[] = { 1024, 2048, 8192 };
-    SDL_Color colors[] = {{ 220, 80, 120, 255 }, { 180, 60, 160, 255 }, { 100, 40, 220, 255 }};
+    SDL_Color colors[] = {{ 69, 182, 254, 255 }, { 41, 109, 152, 255 }, { 28, 73, 102, 255 }};
     for(int i = 0 ; i < 3 ; i++) {
         Tile choice(240, (i + 1) * 150, 120, 120, colors[i]);
         choice.draw(pRenderer);
-        drawText(pRenderer, std::to_string(choices[i]), 255, (i + 1) * 150 + 15, { 0, 0, 0, 255 });
+        drawText(pRenderer, std::to_string(choices[i]), 255, (i + 1) * 150 + 15, { 255, 255, 255, 255 });
     }
 }
 
