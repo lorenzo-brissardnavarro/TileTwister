@@ -28,8 +28,6 @@ public:
     void drawText(SDL_Renderer* pRenderer, std::string text, int x, int y, const SDL_Color& color);
     void drawChoice(SDL_Renderer* pRenderer);
     void addTile();
-    void shift(char direction);
-    void merge(char direction);
     bool move(char direction);
     bool loadFont();
     bool findNumber(int number);

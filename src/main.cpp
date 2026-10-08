@@ -14,7 +14,7 @@ int main() {
     SDL_Event events;
     bool open = true;
 
-    Image duck(600, 605, 120, 100);
+    Image duck(600, 578, 150, 150);
     float speed = 125.0f;
     Uint64 last_time = SDL_GetTicks();
 
@@ -50,7 +50,7 @@ int main() {
 
         game.startInterface(window.getRenderer());
         duck.draw(window.getRenderer(), "images/duck.png");
-        
+
         SDL_RenderPresent(window.getRenderer());
 
         SDL_Delay(16);

@@ -181,126 +181,132 @@ void Grid::drawChoice(SDL_Renderer* pRenderer) {
 }
 
 
-// Method for managing movements by sorting the grid
-void Grid::shift(char direction) {
+// Method for managing correct movement and merging according to direction
+bool Grid::move(char direction) {
+    auto oldGrid = grid;
     switch(direction) {
-        // All the numbers in the row are shifted to the left
+        // Move and merge to the left
         case 'l':
-            for(int i = 0 ; i < 4 ; i++) {
+            for(int i = 0; i < 4; i++) {
+                // All the numbers in the row are shifted to the left
                 stable_partition(grid[i].begin(), grid[i].end(), [](int n) {
                     return n != 0;
                 });
-            }
-            break;
 
-        // All the numbers in the row are shifted to the right
-        case 'r':
-            for(int i = 0 ; i < 4 ; i++) {
-                stable_partition(grid[i].begin(), grid[i].end(), [](int n) {
-                    return n == 0;
-                });
-            }
-            break;
-
-        // The numbers in the column are grouped together before being sorted from left to right
-        case 'u':
-            for(int i = 0 ; i < 4 ; i++) {
-                std::vector<int> temp(4);
-                for(int j = 0 ; j < 4 ; j++) {
-                    temp[j] = grid[j][i];
-                }
-                stable_partition(temp.begin(), temp.end(), [](int n) {
-                    return n != 0;
-                });
-                for(int j = 0 ; j < 4 ; j++) {
-                    grid[j][i] = temp[j];
-                }
-            }
-            break;
-
-        // The numbers in the column are grouped together before being sorted from right to left
-        case 'd':
-            for(int i = 0 ; i < 4 ; i++) {
-                std::vector<int> temp(4);
-                for(int j = 0 ; j < 4 ; j++) {
-                    temp[j] = grid[j][i];
-                }
-                stable_partition(temp.begin(), temp.end(), [](int n) {
-                    return n == 0;
-                });
-                for(int j = 0 ; j < 4 ; j++) {
-                    grid[j][i] = temp[j];
-                }
-            }
-            break;
-    }
-}
-
-
-// Method for calculating the merging of two tiles along a given direction
-void Grid::merge(char direction) {
-    switch(direction) {
-        // We scan the line from left to right
-        case 'l':
-            for(int i = 0 ; i < 4 ; i++) {
-                for(int j = 0 ; j < 3 ; j++) {
-                    if(grid[i][j] == grid[i][j+1]){
+                // We scan the line from left to right
+                for(int j = 0; j < 3; j++) {
+                    if(grid[i][j] == grid[i][j + 1]) {
                         this->score += grid[i][j];
                         grid[i][j] *= 2;
                         grid[i][j+1] = 0;
                     }
                 }
+
+                // Move again after a merge
+                stable_partition(grid[i].begin(), grid[i].end(), [](int n) {
+                    return n != 0;
+                });
             }
             break;
 
-        // We scan the line from right to left
+        // Move and merge to the right
         case 'r':
-            for(int i = 0 ; i < 4 ; i++) {
-                for(int j = 3 ; j > 0 ; j--) {
-                    if(grid[i][j] == grid[i][j-1]){
+            for(int i = 0; i < 4; i++) {
+                // All the numbers in the row are shifted to the right
+                stable_partition(grid[i].begin(), grid[i].end(), [](int n) {
+                    return n == 0;
+                });
+
+                // We scan the line from right to left
+                for(int j = 3; j > 0; j--) {
+                    if(grid[i][j] == grid[i][j- 1]) {
                         this->score += grid[i][j];
                         grid[i][j] *= 2;
                         grid[i][j-1] = 0;
                     }
                 }
+
+                // Move again after a merge
+                stable_partition(grid[i].begin(), grid[i].end(), [](int n) {
+                    return n == 0;
+                });
             }
             break;
 
-        // We scan the column from left to right
+        // Move and merge upwards
         case 'u':
-            for(int i = 0 ; i < 4 ; i++) {
-                for(int j = 0 ; j < 3 ; j++) {
-                    if(grid[j][i] == grid[j+1][i]){
-                        this->score += grid[j][i];
-                        grid[j][i] *= 2;
-                        grid[j+1][i] = 0;
+
+            for(int i = 0; i < 4; i++) {
+                std::vector<int> temp(4);
+
+                // The numbers in the column are grouped together before being sorted from left to right
+                for(int j = 0; j < 4; j++) {
+                    temp[j] = grid[j][i];
+                }
+
+                stable_partition(temp.begin(), temp.end(), [](int n) {
+                    return n != 0;
+                });
+
+                // We scan the column from left to right
+                for(int j = 0; j < 3; j++) {
+                    if(temp[j] == temp[j+1]) {
+                        this->score += temp[j];
+                        temp[j] *= 2;
+                        temp[j + 1] = 0;
                     }
                 }
+
+                // Move again after a merge
+                stable_partition(temp.begin(), temp.end(), [](int n) {
+                    return n != 0;
+                });
+
+                for(int j = 0; j < 4; j++) {
+                    grid[j][i] = temp[j];
+                }
             }
+
             break;
 
-        // We scan the column from right to left
+
+        // Move and merge downwards
         case 'd':
-            for(int i = 0 ; i < 4 ; i++) {
-                for(int j = 3 ; j > 0 ; j--) {
-                    if(grid[j][i] == grid[j-1][i]){
-                        this->score += grid[j][i];
-                        grid[j][i] *= 2;
-                        grid[j-1][i] = 0;
+
+            for(int i = 0; i < 4; i++) {
+                std::vector<int> temp(4);
+
+                // The numbers in the column are grouped together before being sorted from right to left
+                for(int j = 0; j < 4; j++) {
+                    temp[j] = grid[j][i];
+                }
+
+                stable_partition(temp.begin(), temp.end(), [](int n) {
+                    return n == 0;
+                });
+
+                // We scan the column from right to left
+                for(int j = 3; j > 0; j--) {
+                    if(temp[j] == temp[j - 1]) {
+                        this->score += temp[j];
+                        temp[j] *= 2;
+                        temp[j - 1] = 0;
                     }
                 }
+
+                // Move again after a merge
+                stable_partition(temp.begin(), temp.end(), [](int n) {
+                    return n == 0;
+                });
+
+                for(int j = 0; j < 4; j++) {
+                    grid[j][i] = temp[j];
+                }
             }
+
             break;
     }
-}
 
-
-// Method for managing correct movement and merging according to direction
-bool Grid::move(char direction) {
-    auto oldGrid = grid;
-    shift(direction);
-    merge(direction); 
-    shift(direction); // Move again after a merge
     return oldGrid != grid; // We check if the grid has changed and therefore if we need to add a new tile or not
 }
 
